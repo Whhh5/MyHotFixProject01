@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Scene_Battle_Classic_Prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: fddab01f9b9fef64aa3426334d4c35fb
+    m_Address: Bullet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 289300da64fe23947956f5e063941294, type: 2}
   m_SchemaSet:
