@@ -5,23 +5,23 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using System.Runtime.InteropServices;
 using BXB.Core;
+using System.IO;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
 
 public class Attack : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] float intervalTime = 0.2f;
-    [SerializeField] float r;
+    [SerializeField] float r = 10.0f;
     [SerializeField] uint bulletCount = 10;
     [SerializeField] List<Transform> targets = new List<Transform>();
 
 
 
-    [SerializeField] List<GameObject> lists = new List<GameObject>();
-
-    [SerializeField] List<GameObject> lists2 = new List<GameObject>();
-
     [SerializeField] uint removeIndex = 0;
-    [SerializeField] public A_List<GameObject> _List = new A_List<GameObject>(10);
+    [SerializeField] public A_List<GameObject> _List;
+
 
     private void Update()
     {
@@ -29,6 +29,7 @@ public class Attack : MonoBehaviour
         {
             StartCoroutine(Fire());
         }
+        
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
@@ -53,15 +54,15 @@ public class Attack : MonoBehaviour
                 Debug.Log("É¾³ýÊ§°Ü");
             }
         }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            TestManager.Instance._pool.ClearPool();
+        }
     }
+
 
     void Start()
     {
-        _List = new A_List<GameObject>(10);
-        //value = null;
-        //GCHandle h2 = GCHandle.Alloc(value, GCHandleType.Pinned);
-        //IntPtr addr2 = h2.AddrOfPinnedObject();
-        //Debug.Log(addr2.ToString("X"));
     }
 
     private Vector3 GetRandomPoint(float r)
@@ -69,32 +70,67 @@ public class Attack : MonoBehaviour
         return transform.position + new Vector3(UnityEngine.Random.Range(-r, r), UnityEngine.Random.Range(-r, r), UnityEngine.Random.Range(-r, r));
     }
 
-    public bool TryGet(int index, out GameObject obj)
-    {
-        bool ret = false;
-
-        obj = lists[index];
-
-
-        return ret;
-    }
-
 
     IEnumerator Fire()
     {
-        for (int i = 0; i < bulletCount; i++)
+        for (int i = 0; i < 10; i++)
         {
             Addressables.LoadAssetAsync<GameObject>("Bullet").Completed += (asyncOperationsHandle) =>
             {
-                if (asyncOperationsHandle.Status != UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Failed)
+                if (asyncOperationsHandle.Status != AsyncOperationStatus.Failed)
                 {
-                    var obj = asyncOperationsHandle.Result.GetComponent<Bullet>();
-                    Bullet bullet = GameObject.Instantiate(obj, transform.position, Quaternion.identity);
-                    StartCoroutine(bullet.Move(bullet.transform.position, GetRandomPoint(r), targets[UnityEngine.Random.Range(0, targets.Count)]));
+                    if (TestManager.Instance._pool.Get(asyncOperationsHandle.Result, out Bullet bullet, true))
+                    {
+                        bullet.transform.position = this.transform.position;
+                        StartCoroutine(bullet.Move(bullet.transform.position, GetRandomPoint(r), targets[UnityEngine.Random.Range(0, targets.Count)]));
+                    }
+                    else
+                    {
+                        Debug.Log("»ñÈ¡Ê§°Ü");
+                    }
                 }
             };
             yield return new WaitForSeconds(intervalTime);
         }
-    }
+        num.Add(2);
 
+    }
+    int num = 3;
+
+
+
+    public void Gen<T>(T asd)
+    {
+        var hash = asd.GetHashCode();
+        Debug.Log(hash);
+    }
 }
+
+
+public static class Extid
+{
+    public static void Add(this int ut, int a)
+    {
+
+    }
+}
+
+
+
+class Box
+{
+    private double? length = null;  
+    private double? breadth; 
+    private double? height;  
+    public static Box operator+(Box b, Box c)
+    {
+        Box box = new Box();
+
+
+
+
+
+        return box;
+    }
+}
+

@@ -41,6 +41,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3b76322a3645933478c68001a4a40fe5, type: 2}
   - {fileID: 11400000, guid: 464b87e6aad7e62449f1bca716499bf1, type: 2}
   - {fileID: 11400000, guid: 3aecbbf932965144784278d6a0d3ddc4, type: 2}
+  - {fileID: 11400000, guid: 155d0013741de8c46b3d727b33d80031, type: 2}
+  - {fileID: 11400000, guid: e3ff27b0c3296f041a35ce5df7867bc1, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -82,6 +84,14 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - Excle
+    - Prefab
+    - UI
+    - Scene
+    - Effect
+    - Asset
+    - Image
+    - Shader
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 23f4991ca8398654cbae2f1c55993e9b, type: 2}

@@ -1,0 +1,14 @@
+/*
+*this script this template create
+*template name: AssetClass.txt
+*/
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System;
+[Serializable]
+public class {0}
+{{
+{1}
+{2}
+}}

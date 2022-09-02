@@ -1,0 +1,12 @@
+/*
+*this script this template create
+*template name: AssetClass.txt
+*/
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public partial class {0}
+{{
+{1}
+}}

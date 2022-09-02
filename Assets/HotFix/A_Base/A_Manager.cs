@@ -8,7 +8,11 @@ namespace BXB
     {
         public class A_Manager
         {
-            public static A_Mgr_Resource resource;
+            public static A_Mgr_Resource mgr_resource;
+            public static TestManager mgr_system;
+
+
+            
         }
     }
 }

@@ -1,0 +1,29 @@
+UniTask API						->			https://ronpad.com/docs/tinax/unitask.html
+
+	UniTask.WaitUntil													 ->		一直等待直到达到某种条件，才执行下面的代码
+	UniTask.WaitWhile													 ->		当达到某种条件才进行等待，条件失败通过
+	UniTask.WaitUntilValueChanged										 ->		一直等待直到值有变化了之后才之执行后面的代码
+	UniTask.SwitchToThreadPool											 ->		之后的代码运行在线程池中
+	UniTask.SwitchToTaskPool											 ->		之后的代码运行在任务池中
+	UniTask.SwitchToMainThread											 ->		*之后的代码运行在主线程中
+	UniTask.SwitchToSynchronizationContext								 ->		之后的代码运行在同步句柄中
+	UniTask.Yield														 ->		相当于yiled return [operation]
+	UniTask.Run															 ->		启动一个标准的线程
+	UniTask.Lazy														 ->		启动一个回调线程
+	UniTask.Void														 ->		void回调辅助方法
+	UniTask.ConfigureAwait												 ->		基于AsyncOperation的拓展配置
+	UniTask.DelayFrame													 ->		延时指定的帧数执行下面的代码
+	UniTask.Delay(…, bool ignoreTimeScale = false, …) parameter			 ->		延时指定的时间执行下面的代码
+
+	unitask.Forget()   ->   不等待执行一个 unitask
+
+
+UniTaskTracker 可视化任务
+	使用UniTask的监视器，可以监视当前执行的哪些任务
+
+其他设置
+	Enable AutoReload：是否允许自动加载task
+	Enable Tracking： 是否允许跟踪task
+	Enable StackTrace：是否允许堆栈跟踪
+	Reload：重新加载task列表
+	GC.Collect：进行GC回收

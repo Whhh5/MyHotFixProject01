@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Master_TableData
+  m_EditorClassIdentifier: 
+  m_GroupName: Master_TableData
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 975676a0d614a024baf738549286d0b6
+  m_SerializeEntries:
+  - m_GUID: ef3c93a62c93b534bba74eebab2ae3d1
+    m_Address: Assets/Resource_Move/Excles/DataMater 1.csv
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 289300da64fe23947956f5e063941294, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4f83f991fbf92624daa087be1a2aae0d, type: 2}
+    - {fileID: 11400000, guid: 2c1a3cf6e17e6b54cb6d8a64ba9a9458, type: 2}

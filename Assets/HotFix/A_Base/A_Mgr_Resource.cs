@@ -12,8 +12,7 @@ namespace BXB
     {
         public class A_Mgr_Resource : A_Mode_Singleton<A_Mgr_Resource>, IMgr_Resource
         {
-            public async Task<TReturn> LoadAssetAsync<TLoad,TReturn>(string name) 
-                where TLoad: UnityEngine.Object
+            public async Task<TReturn> LoadAssetAsync<TReturn>(string name)
                 where TReturn : UnityEngine.Object
             {
                 TReturn ret = null;
@@ -35,19 +34,18 @@ namespace BXB
                 }
                 return ret;
             }
-            public async Task<TReturn> LoadAssetInstantiateAsync<TLoad,TReturn>(string name, Transform parent) 
+            public async Task<TReturn> LoadAssetInstantiateAsync<TReturn>(string name, Transform parent) 
                 where TReturn : UnityEngine.Object
-                where TLoad : UnityEngine.Object
             {
                 TReturn ret = null;
                 try
                 {
-                    ret = await LoadAssetAsync<TLoad, TReturn>(name);
+                    ret = await LoadAssetAsync<TReturn>(name);
                     ret = UnityEngine.Object.Instantiate(ret, parent);
                 }
                 catch (Exception exp)
                 {
-                    A_LogToColor( Color.red, exp.Message);
+                    A_LogToColor( Color.red, $"{name}  ->  {exp.Message}");
                     //ret = (TReturn)(new GameObject()).AddComponent<A_MonoAsync>();
                 }
                 return ret;
@@ -56,6 +54,27 @@ namespace BXB
             public async Task DownLoadAddressables()
             {
                 await AsyncDefault();
+            }
+
+
+
+            public bool TryLoadSystemPoolObject()
+            {
+                bool ret = false;
+
+                if (true)
+                {
+
+
+
+
+                    ret = true;
+                }
+                return ret;
+            }
+            public void ClearSystemPool()
+            {
+
             }
         }
     }

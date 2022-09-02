@@ -62,7 +62,7 @@ public class App
             // "protobuf-net.dll",
             // "Google.Protobuf.dll",
             // "MongoDB.Bson.dll",
-            // "DOTween.Modules.dll",
+            "DOTween.Modules.dll",
             // "UniTask.dll",
         };
 

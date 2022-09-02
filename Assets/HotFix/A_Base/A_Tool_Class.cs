@@ -19,34 +19,32 @@ namespace BXB
         }
 
         [Serializable]
-        public class A_List<TType> : A_
+        public class A_List<TType> : A_, IA_List<TType>
             where TType : UnityEngine.Object
         {
-            //�ڲ�ʹ�õ�����Щ
+            //内部使用调用这些
             [SerializeField] private ushort _unitCount;
             [SerializeField] private uint _countP;
             [SerializeField] private List<TType> _list;
-            private A_LinkList<uint> _nicksLinkList;
+            [SerializeField] private A_LinkList<uint> _nicksLinkList;
 
-            //�ⲿ��ȡ�������
+            //外部获取调用这个
             public List<TType> list { get => _list; }
             public ushort unitCount { get => _unitCount; }
             public uint countP { get => _countP; }
             public A_LinkList<uint> nicks { get => _nicksLinkList; }
 
-
-
+            //初始化
             public A_List(ushort unitCount = 10)
             {
                 if (!(unitCount > 0))
                 {
                     unitCount = 1;
                 }
-                //��ʼ������
+                //初始化变量
                 Init(unitCount);
             }
-
-            public void Init(ushort unitCount)
+            private void Init(ushort unitCount)
             {
                 try
                 {
@@ -62,24 +60,7 @@ namespace BXB
                 }
             }
 
-            private void AddNicksLinkList(uint index)
-            {
-                var link = new A_LinkList<uint>(index, _nicksLinkList);
-                _nicksLinkList = link;
-            }
-            private bool TryGetNicksLinkList(out A_LinkList<uint> data)
-            {
-                bool ret = false;
-                data = null;
-                if (_nicksLinkList != null)
-                {
-                    data = _nicksLinkList;
-                    _nicksLinkList = _nicksLinkList.next;
-                    ret = true;
-                }
-                return ret;
-            }
-
+            //获取
             public bool TryGetValueToIndex(uint index, out TType value)
             {
                 bool ret = false;
@@ -92,6 +73,10 @@ namespace BXB
                     {
                         value = _list[f_index];
                         ret = true;
+                    }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
                     }
                 }
                 catch (Exception exp)
@@ -119,6 +104,10 @@ namespace BXB
                             }
                         }
                     }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
+                    }
                 }
                 catch (Exception exp)
                 {
@@ -126,6 +115,79 @@ namespace BXB
                 }
                 return ret;
             }
+            public bool TryGetAll(out Dictionary<uint, TType> values)
+            {
+                bool ret = false;
+                values = null;
+                try
+                {
+                    if (_countP != 0)
+                    {
+                        for (uint i = 0; i < _countP; i++)
+                        {
+                            if (TryGetValueToIndex(i, out TType f_value) &&
+                                !object.ReferenceEquals(f_value, null))
+                            {
+                                values.Add(i, f_value);
+                            }
+                        }
+                        ret = true;
+                    }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
+                    }
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+
+                return ret;
+            }
+
+            //添加
+            public bool TryAdd(TType value, out uint index)
+            {
+                bool ret = false;
+                index = 0;
+                try
+                {
+                    if (value != null)
+                    {
+                        if (TryGetNicksLinkList(out A_LinkList<uint> data))
+                        {
+                            index = data.value;
+                        }
+                        else
+                        {
+                            index = _countP;
+                            _countP++;
+                            UpdateList();
+                        }
+                        if (TrySetValueToIndex(index, value, out TType f_value2))
+                        {
+                            ret = true;
+                        }
+                        else
+                        {
+                            _countP--;
+                            A_LogToColor(Color.yellow, "list add fail    index a error");
+                        }
+                    }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
+                    }
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+                return ret;
+            }
+
+            //修改
             private bool TrySetValueToIndex(uint index, TType value, out TType oldValue, bool isNone = false)
             {
                 bool ret = false;
@@ -157,99 +219,32 @@ namespace BXB
                 }
                 return ret;
             }
-            private bool ExtendList()
-            {
-                bool ret = false;
-                try
-                {
-                    TType[] tempArr = new TType[_list.Count + _unitCount];
-                    _list.CopyTo(0, tempArr, 0, _list.Count);
-                    _list = new List<TType>(tempArr);
-                    ret = true;
-                }
-                catch (Exception exp)
-                {
-                    A_LogToColor(Color.red, exp.Message);
-                }
-                return ret;
-            }
-            public bool TryAdd(TType value, out uint index)
-            {
-                bool ret = false;
-                index = 0;
-                try
-                {
-                    if (value != null)
-                    {
-                        if (TryGetNicksLinkList(out A_LinkList<uint> data))
-                        {
-                            index = data.value;
-                        }
-                        else
-                        {
-                            index = _countP;
-                            _countP++;
-                            Update();
-                        }
-                        if (TrySetValueToIndex(index, value, out TType f_value2))
-                        {
-                            ret = true;
-                        }
-                        else
-                        {
-                            _countP--;
-                            A_LogToColor(Color.yellow, "list add fail    index a error");
-                        }
-                    }
-                }
-                catch (Exception exp)
-                {
-                    A_LogToColor(Color.red, exp.Message);
-                }
-                return ret;
-            }
-            public void Update()
-            {
-                if (_countP >= _list.Count)
-                {
-                    ExtendList();
-                }
-            }
-            public bool TryGetAll(out Dictionary<uint, TType> values)
-            {
-                bool ret = false;
-                values = null;
-                if (_countP != 0)
-                {
-                    for (uint i = 0; i < _countP; i++)
-                    {
-                        if (TryGetValueToIndex(i, out TType f_value) &&
-                            !object.ReferenceEquals(f_value, null))
-                        {
-                            values.Add(i, f_value);
-                        }
-                    }
-                    ret = true;
-                }
-                return ret;
-            }
+
+            //查找
             public bool TryFind(TType obj, out uint index)
             {
                 bool ret = false;
                 index = 0;
-                for (uint i = 0; i < _countP; i++)
+                try
                 {
-                    if (TryGetValueToIndex(i, out TType element) && object.Equals(element, obj))
+                    for (uint i = 0; i < _countP; i++)
                     {
-                        index = i;
-                        ret = true;
-                        break;
+                        if (TryGetValueToIndex(i, out TType element) && object.Equals(element, obj))
+                        {
+                            index = i;
+                            ret = true;
+                            break;
+                        }
                     }
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.yellow, $"{exp.Message}");
                 }
                 return ret;
             }
 
-
+            //删除
             public bool TryRemoveAtIndex(uint index, out TType oldValue)
             {
                 bool ret = false;
@@ -311,12 +306,253 @@ namespace BXB
                         Init(_unitCount);
                         ret = true;
                     }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
+                    }
                 }
                 catch (Exception exp)
                 {
                     A_LogToColor(Color.yellow, $"Clear list fail, {exp.Message}");
                 }
                 return ret;
+            }
+
+            //链表
+            private void AddNicksLinkList(uint index)
+            {
+                try
+                {
+                    var link = new A_LinkList<uint>(index,  _nicksLinkList);
+                    _nicksLinkList = link;
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+            }
+            private bool TryGetNicksLinkList(out A_LinkList<uint> data)
+            {
+                bool ret = false;
+                data = null;
+                try
+                {
+                    if (_nicksLinkList != null)
+                    {
+                        data = _nicksLinkList;
+                        _nicksLinkList = _nicksLinkList.next;
+                        ret = true;
+                    }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
+                    }
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+                return ret;
+            }
+
+            //更新
+            private void UpdateList()
+            {
+                if (_countP >= _list.Count)
+                {
+                    ExtendList();
+                }
+            }
+
+            //拓展列表
+            private bool ExtendList()
+            {
+                bool ret = false;
+                try
+                {
+                    TType[] tempArr = new TType[_list.Count + _unitCount];
+                    _list.CopyTo(0, tempArr, 0, _list.Count);
+                    _list = new List<TType>(tempArr);
+                    ret = true;
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+                return ret;
+            }
+        }
+
+        [Serializable]
+        public class A_List2<TType> : A_, IA_List2<TType>
+            where TType : UnityEngine.Object
+        {
+            [SerializeField] private ushort _unitCount;
+            [SerializeField] private uint _countP;
+            [SerializeField] private List<TType> _list;
+
+
+            public List<TType> list { get => _list; }
+            public ushort unitCount { get => _unitCount; }
+            public uint countP { get => _countP; }
+
+            public A_List2(ushort unitCount = 10)
+            {
+                if (!(unitCount > 0))
+                {
+                    unitCount = 1;
+                }
+                //初始化变量
+                Init(unitCount);
+            }
+            private void Init(ushort unitCount)
+            {
+                try
+                {
+                    TType[] arr = new TType[unitCount];
+                    _list = new List<TType>(arr);
+                    this._unitCount = unitCount;
+                    _countP = 0;
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, "init list fail: " + exp.Message);
+                }
+            }
+            public bool TryPop(out TType value)
+            {
+                bool ret = false;
+                value = null;
+                try
+                {
+                    A_LogToColor(Color.cyan, _countP);
+                    if (_countP > 0 &&
+                        _countP.TryToInt(out int f_index))
+                    {
+                        value = _list[f_index - 1];
+                        _list[f_index - 1] = null;
+                        _countP--;
+                        ret = true;
+                    }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
+                    }
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+
+                return ret;
+            }
+
+            public bool TryPush(TType value)
+            {
+                bool ret = false;
+                try
+                {
+                    if (!object.ReferenceEquals(value, null) &&
+                        _countP.TryToInt(out int f_index))
+                    {
+                        _list[f_index] = value;
+                        _countP++;
+                        ret = true;
+                    }
+                    else
+                    {
+                        A_LogToColor(Color.yellow, "Warning");
+                    }
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+
+                UpdateList();
+                return ret;
+            }
+
+            //更新
+            private void UpdateList()
+            {
+                if (_countP >= _list.Count)
+                {
+                    ExtendList();
+                }
+            }
+
+            //拓展列表
+            private bool ExtendList()
+            {
+                bool ret = false;
+                try
+                {
+                    TType[] tempArr = new TType[_list.Count + _unitCount];
+                    _list.CopyTo(0, tempArr, 0, _list.Count);
+                    _list = new List<TType>(tempArr);
+                    ret = true;
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message);
+                }
+                return ret;
+            }
+
+            public bool TryClear(out List<TType> oldList)
+            {
+                bool ret = false;
+                oldList = null;
+
+                try
+                {
+                    while (_countP > 0)
+                    {
+                        if ((_countP - 1).TryToInt(out int f_index))
+                        {
+                            GameObject.Destroy(_list[f_index]);
+                        }
+                        _countP--;
+                    }
+                    ret = true;
+                }
+                catch (Exception exp)
+                {
+                    A_LogToColor(Color.red, exp.Message.ToString());
+                }
+                return ret;
+            }
+        }
+
+
+        public abstract class PoolObjectBase : A_MonoBase, IPoolObjectBase
+        {
+            private GameObject _originalObject;
+
+            public bool TryGetOriginalObject(out GameObject original)
+            {
+                bool ret = false;
+                original = null;
+                if (!object.ReferenceEquals(_originalObject, null))
+                {
+                    original = _originalObject;
+                    ret = true;
+                }
+                else
+                {
+                    A_LogToColor(Color.yellow, "Warning");
+                }
+                return ret;
+            }
+            public void SetOriginal(GameObject original)
+            {
+                _originalObject = original;
+            }
+            public void Destroy<TValue>(A_Mgr_Pool<TValue> originalPool)
+                where TValue: PoolObjectBase
+            {
+                originalPool.ReplaceAsync((TValue)this);
             }
         }
     }

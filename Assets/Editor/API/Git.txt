@@ -1,0 +1,16 @@
+git config -l
+
+git add ""
+git reset HEAD ""
+git rm -r -n --cached ""
+
+git commit -m ""
+git branch -M
+git branch -d ""
+
+git checkout ""
+
+git remote add origin gitLink
+git remote -v
+
+git push -u origin master:master
