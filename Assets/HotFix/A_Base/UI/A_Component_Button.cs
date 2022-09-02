@@ -80,7 +80,7 @@ public class A_Component_Button : A_MonoAsync, IPointerClickHandler, IPointerDow
         _Rect.DOScale(scale_Enter + Vector3.one * 0.1f, 0.2f)
             .OnComplete(()=>
             {
-                _Rect.DOScale(scale_Enter, 0.2f);
+                _Rect.DOScale(scale_Enter, 0.1f);
             });
         try
         {
@@ -112,7 +112,7 @@ public class A_Component_Button : A_MonoAsync, IPointerClickHandler, IPointerDow
         _Rect.DOScale(scale_Exit + Vector3.one * -0.1f, 0.2f)
             .OnComplete(()=>
             {
-                _Rect.DOScale(scale_Exit, 0.2f);
+                _Rect.DOScale(scale_Exit, 0.1f);
             });
         _buttonEvent?.Invoke(ButtonStatus.Exit);
         _state ^= ButtonStatus.Up;
@@ -124,7 +124,7 @@ public class A_Component_Button : A_MonoAsync, IPointerClickHandler, IPointerDow
         _Rect.DOScale(scale_Up + Vector3.one * 0.1f, 0.2f)
             .OnComplete(()=>
             {
-                _Rect.DOScale(scale_Exit, 0.2f);
+                _Rect.DOScale(scale_Exit, 0.1f);
             });
         _buttonEvent?.Invoke(ButtonStatus.Up);
         _state ^= ButtonStatus.Enter;
