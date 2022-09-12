@@ -45,7 +45,6 @@ public class LoadDll : MonoBehaviour
                 s_abBytes[ab] = abBytes;
             }
         }
-
         onDownloadComplete();
     }
 
@@ -68,6 +67,7 @@ public class LoadDll : MonoBehaviour
         System.Reflection.Assembly.Load(dllBytes1.bytes);
         TextAsset dllBytes2 = dllAB.LoadAsset<TextAsset>("HotFix2.dll.bytes");
         gameAss = System.Reflection.Assembly.Load(dllBytes2.bytes);
+        Debug.Log($"13    ");
 #else
         gameAss = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "HotFix2");
 #endif
@@ -76,13 +76,17 @@ public class LoadDll : MonoBehaviour
 
     public void RunMain()
     {
+        Debug.Log("9");
         if (gameAss == null)
         {
             UnityEngine.Debug.LogError("dll未加载");
             return;
         }
+        Debug.Log("10");
         var appType = gameAss.GetType("App");
+        Debug.Log($"11    {appType != null}");
         var mainMethod = appType.GetMethod("Main");
+        Debug.Log($"12      {mainMethod!=null}");
         mainMethod.Invoke(null, null);
     }
 }

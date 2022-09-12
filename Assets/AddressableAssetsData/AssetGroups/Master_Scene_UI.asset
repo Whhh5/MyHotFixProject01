@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: bdc9049f2323b0d4c85cad552e86198e
   m_SerializeEntries:
   - m_GUID: a56daf3bfae5ec44fbdb47899d919e7f
-    m_Address: Scene_Ui
+    m_Address: Scene_UI
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 2b0aa91c98f29dd478ba13f8a1ea0a29

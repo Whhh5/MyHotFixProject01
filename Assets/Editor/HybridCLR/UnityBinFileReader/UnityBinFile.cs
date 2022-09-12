@@ -12,7 +12,7 @@ namespace HybridCLR.Editor.GlobalManagers
     /// <summary>
     /// Unity 生成的二进制文件(本代码不支持5.x之前的版本)
     /// </summary>
-    public unsafe class UnityBinFile
+    public class UnityBinFile
     {
         /*
          * MonoManager: idx: 6;

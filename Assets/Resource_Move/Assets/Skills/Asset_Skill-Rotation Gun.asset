@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 209800b8d3b411941aaaa8d550a5c997, type: 3}
+  m_Name: Asset_Skill-Rotation Gun
+  m_EditorClassIdentifier: 
+  name_skill: Rotation Gun
+  icon: {fileID: 21300000, guid: 301637a13ac4713419e0ebed75680d94, type: 3}
+  time_ParsistPlay: 5
+  time_AttackInterval: 0.25
+  slowDown_Speed: 0.3
+  radius: 10
+  layerMask_Target:
+    serializedVersion: 2
+    m_Bits: 128
+  buttleName: Buttle
+  height: 0.5
+  topSpeed: 0.3
+  harm: 999
+  mat_Random: {fileID: 2100000, guid: 23e90fbf997c1a349a07081d3e980463, type: 2}

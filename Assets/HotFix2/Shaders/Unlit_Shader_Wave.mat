@@ -20,10 +20,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
-    - _HeightBottom: 3.45
-    - _MaxDircetion: 2.74
-    - _MaxHeright: 5.65
-    - _Speed: -7.46
+    - _HeightBottom: 0
+    - _MaxDircetion: 1.33
+    - _MaxHeright: -1.36
+    - _Speed: 19.54
     m_Colors:
     - _EndColor: {r: 0.35859376, g: 0.5377358, b: 0.25618547, a: 0}
     - _StartColor: {r: 0.6981132, g: 0.29966182, b: 0.29966182, a: 0}

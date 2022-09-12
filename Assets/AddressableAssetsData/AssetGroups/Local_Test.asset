@@ -17,16 +17,28 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 5e720e4113c6cc24686808b1f5d2dee1
   m_SerializeEntries:
-  - m_GUID: e5ed787ee851f024190eccf194db53f2
-    m_Address: Dialog_Test1
+  - m_GUID: d08b545b285ee654fbe7880eac4557d0
+    m_Address: SpriteAtlas_UIDialog_Lobby_Page
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: f4fc1b98b5f68b2439a12abfa053660b
-    m_Address: Dialog_Test2
+  - m_GUID: 0177e37ced5525c4ea1be518260d3889
+    m_Address: Asset_DefaultValue
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 67a0f736849cc0c4dafaa6e6c92a80ad
-    m_Address: Dialog_Test3
+  - m_GUID: 0e1b4dd56032cfd4fa6d8f6613364a3c
+    m_Address: Asset_CommonPath
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 08fe0bba4698ca64bb3df0a5d7de853d
+    m_Address: Dialog_BoxEventMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0eca387cfbe66bc4b831208972a8c8fc
+    m_Address: Buttle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d6d2d47469b7d68439c4f2e17d2ac8df
+    m_Address: Pb_CM_Number3D
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

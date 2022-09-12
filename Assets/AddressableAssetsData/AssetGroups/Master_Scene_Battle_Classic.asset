@@ -29,6 +29,22 @@ MonoBehaviour:
     m_Address: Bullet
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 0bd32ab2752c25444abf1d7cd858fc36
+    m_Address: Dialog_BattleContriller
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: be3b91f6817d1ad4ab1c54bb092057fd
+    m_Address: Player------2
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 3a585e2588988ff41a866d83f3b67d6c
+    m_Address: Player------1
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 9f022af641c324f42b241ad2b169e28e
+    m_Address: Player
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 289300da64fe23947956f5e063941294, type: 2}
   m_SchemaSet:
