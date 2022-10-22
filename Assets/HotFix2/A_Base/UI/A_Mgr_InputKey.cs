@@ -46,11 +46,26 @@ public class A_Mgr_InputKey : A_Mode_Singleton_Mono<A_Mgr_InputKey>
 
     public void AddKeyDownEvent(Func<KeyCode, UniTask> action)
     {
+        Delegate[] arr = key_KeyDown.GetInvocationList();
+        var index1 = Array.IndexOf(arr, action);
+        if (index1 != -1)
+        {
+            return;
+        }
         key_KeyDown += action;
+        LogColor(Color.black, $"now key down event count -> {arr.Length}");
     }
     public void AddAnyKeyEvent(Func<KeyCode, UniTask> action)
     {
+        Delegate[] arr2 = key_AnyKey.GetInvocationList();
+
+        var index2 = Array.IndexOf(arr2, action);
+        if (index2 != -1)
+        {
+            return;
+        }
         key_AnyKey += action;
+        LogColor(Color.black, $"now key down event count -> {arr2.Length}");
     }
 
     public void RemoveKeyEvent(Func<KeyCode, UniTask> action)
@@ -58,14 +73,18 @@ public class A_Mgr_InputKey : A_Mode_Singleton_Mono<A_Mgr_InputKey>
         Delegate[] arr = key_KeyDown.GetInvocationList();
         Delegate[] arr2 = key_AnyKey.GetInvocationList();
 
-        if (Array.IndexOf(arr, action) != -1)
+        var index1 = Array.IndexOf(arr, action);
+        var index2 = Array.IndexOf(arr2, action);
+        if (index1 != -1)
         {
             key_KeyDown -= action;
         }
-        if (Array.IndexOf(arr2, action) != -1)
+        if (index2 != -1)
         {
             key_AnyKey -= action;
         }
+
+        LogColor(Color.yellow, $"----------------index1 -> {index1},    index2 -> {index2} ---------------- {action != null}");
     }
 
     public void RemoveAllKeyEvent(Func<KeyCode, UniTask> action)

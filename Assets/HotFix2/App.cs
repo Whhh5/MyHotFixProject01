@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
 struct MyValue
@@ -64,22 +65,63 @@ public class App
             // "protobuf-net.dll",
             // "Google.Protobuf.dll",
             // "MongoDB.Bson.dll",
-            "DOTween.Modules.dll",
-           "UniTask.dll",
+            //"DOTween.Modules.dll",
+            "System.Data.dll",
+            "DOTween.dll",
+            "UniTask.dll",
         };
 
         AssetBundle dllAB = LoadDll.AssemblyAssetBundle;
+        Debug.Log($"LoadMetadataForAOTAssembly:{dllAB != null}. ret:");
         foreach (var aotDllName in aotDllList)
         {
             byte[] dllBytes = dllAB.LoadAsset<TextAsset>(aotDllName).bytes;
             fixed (byte* ptr = dllBytes)
             {
-                Debug.Log($"3      {aotDllName}");
-                // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
-                int err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly((IntPtr)ptr, dllBytes.Length);
-                Debug.Log($"LoadMetadataForAOTAssembly:{aotDllName}. ret:{err}");
+                try
+                {
+                    Debug.Log($"3      {aotDllName}");
+                    // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
+                    int err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly((IntPtr)ptr, dllBytes.Length);
+                    Debug.Log($"LoadMetadataForAOTAssembly:{aotDllName}. ret:{err}");
+                }
+                catch (Exception exp)
+                {
+                    Debug.Log($"    {aotDllName}      -> {exp}");
+                }
             }
         }
+
+        //foreach (var aotDllName in aotDllList)
+        //{
+        //    byte[] dllBytes = null;
+        //    var trmp_Data = aotDllName;
+        //    Addressables.LoadAssetAsync<TextAsset>(trmp_Data).Completed += (handle) =>
+        //    {
+        //        if (handle.Status == UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationStatus.Succeeded)
+        //        {
+        //            dllBytes = handle.Result.bytes;
+        //            fixed (byte* ptr = dllBytes)
+        //            {
+        //                try
+        //                {
+        //                    Debug.Log($"3      {trmp_Data}");
+        //                    // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
+        //                    int err = HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly((IntPtr)ptr, dllBytes.Length);
+        //                    Debug.Log($"LoadMetadataForAOTAssembly:{trmp_Data}. ret:{err}");
+        //                }
+        //                catch (Exception exp)
+        //                {
+        //                    Debug.Log($"    {trmp_Data}      -> {exp}");
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("加载失败");
+        //        }
+        //    };
+        //}
     }
 
 

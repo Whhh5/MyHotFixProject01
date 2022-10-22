@@ -19,15 +19,15 @@ public enum ButtonStatus
     Click = 32,
     Long = 64,
 }
-[RequireComponent(typeof(Image))]
+
 [RequireComponent(typeof(RectTransform))]
 public class A_Component_Button : A_MonoAsync, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler
 {
     [SerializeField, ReadOnly] ButtonStatus _state;
     private Func<ButtonStatus, UniTask> _buttonEvent = null;
-
     [SerializeField, ReadOnly] RectTransform _Rect = null;
-    [SerializeField] bool isLone = false;
+    [SerializeField] KeyCode keyboardShortcut;
+
 
     private void Reset()
     {
@@ -36,7 +36,6 @@ public class A_Component_Button : A_MonoAsync, IPointerClickHandler, IPointerDow
     public override async UniTask OnAwakeAsync()
     {
         await AsyncDefault();
-        isLone = false;
     }
     [Button]
     private void InitParameter()
@@ -169,11 +168,31 @@ public class A_Component_Button : A_MonoAsync, IPointerClickHandler, IPointerDow
         return _state;
     }
 
+    public async UniTask SetKeyboardShortcutAsync(KeyCode keyCode)
+    {
+        await AsyncDefault();
+        keyboardShortcut = keyCode;
+    }
+
     private void Update()
     {
         if ((_state & ButtonStatus.Long) == ButtonStatus.Long)
         {
             _buttonEvent?.Invoke(ButtonStatus.Long);
         }
+        if (Input.GetKeyDown(keyboardShortcut))
+        {
+            OnPointerClick(null);
+        }
+    }
+
+    public async UniTask OnDestroyAsync()
+    {
+        await AsyncDefault();
+    }
+
+    private async void OnDestroy()
+    {
+        await OnDestroyAsync();
     }
 }

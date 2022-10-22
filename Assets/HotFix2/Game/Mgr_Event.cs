@@ -4,6 +4,7 @@ using UnityEngine;
 using BXB.Core;
 using System;
 using Cysharp.Threading.Tasks;
+using UnityEngine.UI;
 
 public class Mgr_Event : A_Mode_Singleton<Mgr_Event>
 {
@@ -37,16 +38,38 @@ public class Mgr_Event : A_Mode_Singleton<Mgr_Event>
         data.Add("event_0", async ()=>
         {
             await AsyncDefault();
-            LogColor(Color.gray, "event_0");
+            LogColor(Color.gray, "Start Battle");
         });
     }
 
+    //Battle
     public void Event_100101(out Dictionary<string, Func<UniTask>> data)
     {
         data = new Dictionary<string, Func<UniTask>>();
-        data.Add("event_100101", async () =>
+        data.Add("Start Battle", async () =>
         {
             await A_Mgr_Resource.Instance.LoadSceneAsync( SceneType.Scene_Battle_Classic, UnityEngine.SceneManagement.LoadSceneMode.Additive);
         });
+    }
+    //Shops-Item
+    public void Event_100102(out Dictionary<string, Func<UniTask>> data)
+    {
+        data = new Dictionary<string, Func<UniTask>>();
+        data.Add("Event_100102", async () =>
+        {
+            var parent = await A_Mgr_UI.Instance.GetUIApp(A_Mgr_UI.UIApp.System);
+            await A_Mgr_Resource.Instance.LoadUIElementAsync<Dialog_SystemHint>(parent, "please wait open ...... ");
+        });
+    }
+    //Shops-Forging
+    public void Event_100103(out Dictionary<string, Func<UniTask>> data)
+    {
+        data = new Dictionary<string, Func<UniTask>>();
+        data.Add("Event_100103", async () =>
+        {
+            var parent = await A_Mgr_UI.Instance.GetUIApp(A_Mgr_UI.UIApp.System);
+            await A_Mgr_Resource.Instance.LoadUIElementAsync<Dialog_SystemHint>(parent, "please wait open ...... ");
+        });
+
     }
 }

@@ -39,6 +39,21 @@ namespace BXB
                 }
                 return ret;
             }
+            public static Transform Normalized(this Transform transform)
+            {
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.Euler(Vector3.zero);
+                transform.localScale = Vector3.one;
+                return transform;
+            }
+            public static RectTransform Normalized(this RectTransform rect)
+            {
+                rect.anchoredPosition3D = Vector3.zero;
+                rect.sizeDelta = Vector2.zero;
+                rect.localRotation = Quaternion.Euler(Vector3.zero);
+                rect.localScale = Vector3.one;
+                return rect;
+            }
         }
     }
 }

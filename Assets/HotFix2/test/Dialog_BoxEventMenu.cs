@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Dialog_BoxEventMenu : A_UIDialog
 {
-    [SerializeField] ComponentList original_Button = null;
+    [SerializeField] ItemList original_Button = null;
 
     [SerializeField] A_Component_Button button_Close = null;
     protected override async UniTask InitializationAsync(params object[] param)

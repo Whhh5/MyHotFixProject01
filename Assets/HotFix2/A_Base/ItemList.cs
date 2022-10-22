@@ -5,7 +5,7 @@ using UnityEngine;
 using BXB.Core;
 using Sirenix.OdinInspector;
 
-public class ComponentList : SerializedMonoBehaviour
+public class ItemList : SerializedMonoBehaviour
 {
     [Serializable]
     public class ItemFields

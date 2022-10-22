@@ -9,18 +9,16 @@ using DG.Tweening;
 
 public class Dialog_BattleContriller : A_UIDialog
 {
-    [SerializeField] ComponentList hero1;
-    [SerializeField] ComponentList hero2;
-    [SerializeField] ComponentList hero3;
-
-    [SerializeField] A_Component_Button button_hero1;
-    [SerializeField] A_Component_Button button_hero2;
-    [SerializeField] A_Component_Button button_hero3;
+    [SerializeField] A_Component_Button original_Button_Hero = null;
     //[SerializeField] Dictionary<A_Component_Button, ComponentList> keyValuePairs = new Dictionary<A_Component_Button, ComponentList>();
 
 
-    [SerializeField] ComponentList item_SKill;
+    [SerializeField] ItemList item_SKill;
+    [SerializeField] A_Component_Button map_Mini = null;
+    [SerializeField] bool miniMap_Toggle = false;
 
+    [SerializeField] Camera camera_Mini = null;
+    [SerializeField] RawImage miniMap = null;
 
 
     [SerializeField] A_Component_Button cameraMove_Left;
@@ -33,14 +31,14 @@ public class Dialog_BattleContriller : A_UIDialog
 
     List<GameObject> skillList = new List<GameObject>();
 
-    public async UniTask UpdateSkillIcon(ComponentList hero)
+    public async UniTask UpdateSkillIcon(GameObjectBase3D hero)
     {
         foreach (var item in skillList)
         {
             GameObject.Destroy(item);
         }
         skillList = new List<GameObject>();
-        if (hero.TryGet("Skill", out Editor_Skill data))
+        if (hero._itemList.TryGet("Skill", out Editor_Skill data))
         {
             List<UniTask> tasks = new List<UniTask>();
             for (int i = 0; i < data.value.Count; i++)
@@ -62,7 +60,8 @@ public class Dialog_BattleContriller : A_UIDialog
     private async UniTask<RectTransform> GetItem_Skill(string name, Sprite sprite, KeyCode keyCode)
     {
         RectTransform ret = null;
-        if (hero1.TryGet("Skill", out Editor_Skill data))
+        var nowPlayer = GameManager.Instance._nowPlayer;
+        if (nowPlayer._itemList.TryGet("Skill", out Editor_Skill data))
         {
             var obj = GameObject.Instantiate(item_SKill, item_SKill.transform.parent);
             ret = obj.GetComponent<RectTransform>();
@@ -117,63 +116,41 @@ public class Dialog_BattleContriller : A_UIDialog
     }
     protected override async UniTask HideAsync(params object[] param)
     {
-
+        await AsyncDefault();
     }
 
     protected override async UniTask InitializationAsync(params object[] param)
     {
         Cursor.lockState = CursorLockMode.Confined;
-        await button_hero1.AddClick(async (state) =>
-        {
-            if ((state & ButtonStatus.Click) == ButtonStatus.Click)
-            {
-                await Mgr_Scene_Battle_Classic.Instance.SetPlayerAsync(hero1);
-                await UpdateSkillIcon(hero1);
-            }
-        });
-        await button_hero2.AddClick(async (state) =>
-        {
-            if ((state & ButtonStatus.Click) == ButtonStatus.Click)
-            {
-                await Mgr_Scene_Battle_Classic.Instance.SetPlayerAsync(hero2);
-                await UpdateSkillIcon(hero2);
-            }
-        });
-        await button_hero3.AddClick(async (state) =>
-        {
-            if ((state & ButtonStatus.Click) == ButtonStatus.Click)
-            {
-                await Mgr_Scene_Battle_Classic.Instance.SetPlayerAsync(hero3);
-                await UpdateSkillIcon(hero3);
-            }
-        });
+
+
 
         await cameraMove_Left.AddClick(async (state) =>
         {
             if ((state & ButtonStatus.Long) == ButtonStatus.Long)
             {
-                await Mgr_Scene_Battle_Classic.Instance._camera.MoveAsync(CameraController.MoveType.Left);
+                await GameManager.Instance._mainCamera.MoveAsync(CameraController.MoveType.Left);
             }
         });
         await cameraMove_Right.AddClick(async (state) =>
         {
             if ((state & ButtonStatus.Long) == ButtonStatus.Long)
             {
-                await Mgr_Scene_Battle_Classic.Instance._camera.MoveAsync(CameraController.MoveType.Right);
+                await GameManager.Instance._mainCamera.MoveAsync(CameraController.MoveType.Right);
             }
         });
         await cameraMove_Top.AddClick(async (state) =>
         {
             if ((state & ButtonStatus.Long) == ButtonStatus.Long)
             {
-                await Mgr_Scene_Battle_Classic.Instance._camera.MoveAsync(CameraController.MoveType.Top);
+                await GameManager.Instance._mainCamera.MoveAsync(CameraController.MoveType.Top);
             }
         });
         await cameraMove_Bottom.AddClick(async (state) =>
         {
             if ((state & ButtonStatus.Long) == ButtonStatus.Long)
             {
-                await Mgr_Scene_Battle_Classic.Instance._camera.MoveAsync(CameraController.MoveType.Bottom);
+                await GameManager.Instance._mainCamera.MoveAsync(CameraController.MoveType.Bottom);
             }
         });
     }
@@ -184,11 +161,42 @@ public class Dialog_BattleContriller : A_UIDialog
         var obj2 = await A_Mgr_Resource.Instance.LoadAssetInstantiateAsync<Transform>("Player------1");
         var obj3 = await A_Mgr_Resource.Instance.LoadAssetInstantiateAsync<Transform>("Player------2");
 
-        hero1 = obj1.GetComponent<ComponentList>();
-        hero2 = obj2.GetComponent<ComponentList>();
-        hero3 = obj3.GetComponent<ComponentList>();
+        var  hero1 = obj1.GetComponent<GameObjectBase3D>();
+        var hero2 = obj2.GetComponent<GameObjectBase3D>();
+        var hero3 = obj3.GetComponent<GameObjectBase3D>();
 
-        await Mgr_Scene_Battle_Classic.Instance.SetPlayerAsync(hero1);
+        List<GameObjectBase3D> heroList = new List<GameObjectBase3D>
+        {
+            hero1,hero2,hero3
+        };
+        await InitHeroListAsync(heroList);
+        LogColor(Color.yellow, $"hero count {heroList.Count}");
+        await GameManager.Instance.SetPlayerAsync(hero1);
         await UpdateSkillIcon(hero1);
     }
+
+    private async UniTask InitHeroListAsync(List<GameObjectBase3D> heros)
+    {
+        await AsyncDefault();
+        var original = original_Button_Hero;
+        UniTask[] tasks = new UniTask[heros.Count];
+        for (int i = 0; i < heros.Count; i++)
+        {
+            var button_hero = Instantiate(original, original.transform.parent);
+            var tempData = heros[i];
+            await button_hero.AddClick(async (state) =>
+            {
+                if ((state & ButtonStatus.Click) == ButtonStatus.Click)
+                {
+                    await GameManager.Instance.SetPlayerAsync(tempData);
+                    await UpdateSkillIcon(tempData);
+                }
+            });
+            await button_hero.SetKeyboardShortcutAsync((KeyCode)(49 + i));
+            button_hero.gameObject.SetActive(true);
+        }
+        await UniTask.WhenAll(tasks);
+    }
+
+
 }

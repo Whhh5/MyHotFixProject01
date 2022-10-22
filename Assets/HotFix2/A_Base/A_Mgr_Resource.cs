@@ -162,6 +162,44 @@ namespace BXB
                 }
                 return ret;
             }
+            public async UniTask<PoolObjectBase> LoadUIElementAsync<T>(RectTransform parent, params object[] parameters)
+                where T: PoolObjectBase
+            {
+                PoolObjectBase ret = null;
+                var temp1 = typeof(T).ToString().Split('.');
+                var prefabName = temp1[temp1.Length - 1];
+                try
+                {
+                    var pool = GameManager.Instance._public_Pool;
+                    var handle = Addressables.LoadAssetAsync<GameObject>(prefabName);
+                    handle.Completed += async (handle) =>
+                    {
+                        if (Equals(handle.Status, AsyncOperationStatus.Succeeded))
+                        {
+                            if (pool.TryGet(handle.Result, out ret))
+                            {
+                                ret.gameObject.SetActive(false);
+                                ret.SetOriginal(handle.Result);
+                                var rect = ret.GetComponent<RectTransform>();
+                                rect.SetParent(parent);
+                                rect.Normalized();
+                                await ret.InitAsync(parameters);
+                                await ret.PlayAsync(parameters);
+                            }
+                            else
+                            {
+                                LogColor(Color.red, $"object not load     name -> {prefabName}");
+                            }
+                        }
+                    };
+                    await handle.Task;
+                }
+                catch (Exception exp)
+                {
+                    LogColor(Color.red, $"load element3D defeated,  name and class -> {prefabName}  [->]  {exp}");
+                }
+                return ret;
+            }
 
 
             public bool TryLoadSystemPoolObject()

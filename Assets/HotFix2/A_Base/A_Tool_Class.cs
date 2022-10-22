@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -549,11 +550,15 @@ namespace BXB
             {
                 _originalObject = original;
             }
-            public void Destroy<TValue>(A_Mgr_Pool<TValue> originalPool)
+            public virtual async UniTask DestroyAsync<TValue>(A_Mgr_Pool<TValue> originalPool)
                 where TValue: PoolObjectBase
             {
+                await AsyncDefault();
                 originalPool.ReplaceAsync((TValue)this);
             }
+            public abstract UniTask InitAsync(params object[] parameters);
+            public abstract UniTask PlayAsync(params object[] parameters);
+            public abstract UniTask DestroyAsync();
         }
     }
 }

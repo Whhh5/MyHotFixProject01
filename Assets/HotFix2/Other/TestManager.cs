@@ -8,19 +8,10 @@ namespace BXB
     {
         public class TestManager : A_Mode_Singleton<TestManager>
         {
-            public A_Mgr_Pool<TTTT> _pool = new A_Mgr_Pool<TTTT>();
-
-
-
             public void ClearPool()
             {
                 
             }
-        }
-
-        public class TTTT : PoolObjectBase
-        {
-
         }
     }
 }

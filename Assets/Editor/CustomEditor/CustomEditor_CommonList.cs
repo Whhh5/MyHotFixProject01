@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.UIElements;
 
-[CustomEditor(typeof(ComponentList))]
+[CustomEditor(typeof(ItemList))]
 public class CustomEditor_CommonList : Editor
 {
 
@@ -13,7 +13,7 @@ public class CustomEditor_CommonList : Editor
         base.OnInspectorGUI();
 
 
-        ComponentList temp = target as ComponentList;
+        ItemList temp = target as ItemList;
         Undo.RecordObject(target, "F");
 
         var items = temp.items;
@@ -123,7 +123,7 @@ public class CustomEditor_CommonList : Editor
 
         if (GUILayout.Button("Add Item"))
         {
-            items.Add(new ComponentList.ItemFields());
+            items.Add(new ItemList.ItemFields());
         }
 
         EditorUtility.SetDirty(target);

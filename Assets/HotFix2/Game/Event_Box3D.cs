@@ -7,7 +7,7 @@ using System;
 using System.Reflection;
 using Cysharp.Threading.Tasks;
 
-[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(Collider))]
 public class Event_Box3D : A_Mono
 {
     [SerializeField, ReadOnly] Collider trigger = null;
@@ -40,7 +40,6 @@ public class Event_Box3D : A_Mono
     }
     private async void OnTriggerEnter(Collider other)
     {
-        Debug.Log("1    {(int)Mathf.Pow(2, other.gameObject.layer)}     {triggerLayerMask.value}   {triggerLayerMask.ToString()}   {triggerLayerMask}");
         if ((int)Mathf.Pow(2, other.gameObject.layer) == triggerLayerMask && events != null && events.Count > 0)
         {
             await A_Mgr_UI.Instance.ChangePageAsync<UIPage_EventMenu>(events);
@@ -49,7 +48,6 @@ public class Event_Box3D : A_Mono
 
     private async void OnTriggerExit(Collider other)
     {
-        Debug.Log($"2     {(int)Mathf.Pow(2, other.gameObject.layer)}     {triggerLayerMask.value}   {triggerLayerMask.ToString()}   {triggerLayerMask}");
         if ((int)Mathf.Pow(2, other.gameObject.layer) == triggerLayerMask && events != null && events.Count > 0)
         {
             await A_Mgr_UI.Instance.ChangePageAsync<UIPage_Default>();

@@ -9,5 +9,5 @@ public abstract class Base_ScriptableObject_Skill : ScriptableObject
 {
     public string name_skill;
     public Sprite icon;
-    public abstract UniTask PlayAsync(SkillParamater paras, Func<CallBackPara, UniTask> callback, params object[] parameters);
+    public abstract UniTask PlayAsync(GameObjectBase3D paras, Func<CallBackPara, UniTask> callback, params object[] parameters);
 }

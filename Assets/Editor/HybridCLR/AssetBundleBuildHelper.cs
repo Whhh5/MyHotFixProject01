@@ -21,9 +21,12 @@ namespace HybridCLR
         /// 将HotFix.dll和HotUpdatePrefab.prefab打入common包.
         /// 将HotUpdateScene.unity打入scene包.
         /// </summary>
-        /// <param name="tempDir"></param>
-        /// <param name="outputDir"></param>
+        /// <param name="tempDir"></param>              Application.dataPath + "/HybridCLRBuildCache"/AssetBundleSourceData/BuildTarget
+        /// <param name="outputDir"></param>            Application.dataPath + "/HybridCLRBuildCache"/AssetBundleOutput/BuildTarget
         /// <param name="target"></param>
+        ///
+
+
         private static void BuildAssetBundles(string tempDir, string outputDir, BuildTarget target)
         {
             Directory.CreateDirectory(tempDir);
@@ -43,8 +46,27 @@ namespace HybridCLR
             }
 
             string aotDllDir = BuildConfig.GetAssembliesPostIl2CppStripDir(target);
-            foreach (var dll in BuildConfig.AOTMetaDlls)
+            //List<string> AOTMetaDlls = new List<string>()
+            //{
+            //    "mscorlib.dll",
+            //    "System.dll",
+            //    "System.Core.dll", // 如果使用了Linq，需要这个
+            //    "System.Data.dll",
+            //    "DOTween.dll",
+            //    "UniTask.dll",
+            //};
+            //List<string> AOTMetaDlls2 = new List<string>()
+            //{
+            //    "mscorlib.dll",
+            //    "System.dll",
+            //    "System.Core.dll", // 如果使用了Linq，需要这个
+            //    "System.Data.dll",
+            //    "DOTween.dll",
+            //    "UniTask.dll",
+            //};
+            foreach (var dll in BuildConfig.AOTMetaDlls) //BuildConfig.AOTMetaDlls
             {
+                Debug.Log($"------------------------------{dll}----------------------------");
                 string dllPath = $"{aotDllDir}/{dll}";
                 if (!File.Exists(dllPath))
                 {

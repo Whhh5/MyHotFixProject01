@@ -46,6 +46,7 @@ public class A_Component_Text : A_Mono
     }
     public async UniTask SetTextAsync(object messgae)
     {
+        await AsyncDefault();
         try
         {
             component.text = messgae.ToString();

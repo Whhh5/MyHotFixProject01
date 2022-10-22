@@ -21,15 +21,15 @@ public class ScObj_Skill_RotationGun : Base_ScriptableObject_Skill
     [SerializeField, Range(0.1f, 0.5f)] float topSpeed = 0.3f;
     [SerializeField] float harm = 999;
     [SerializeField] Material mat_Random;
-    public async override UniTask PlayAsync(SkillParamater paras, Func<CallBackPara, UniTask> callback, params object[] parameters)
+    public async override UniTask PlayAsync(GameObjectBase3D paras, Func<CallBackPara, UniTask> callback, params object[] parameters)
     {
         Debug.Log($"Start skill {name_skill} play ......");
         bool isEnd = false;
         var callbackParams = new CallBackPara();
         callbackParams.time_Residue = 0.0f;
         Transform attackRandom = null;
-        var transform = paras.tr;
-        var naviAgent = paras.anv;
+        var transform = paras.transform;
+        var naviAgent = paras._navMeshAgent;
         DOTween.To(() => time_ParsistPlay, (x) => callbackParams.time_Residue = x, 0.0f, time_ParsistPlay).SetEase(Ease.Linear)
             .OnStart(()=>
             {
@@ -44,7 +44,7 @@ public class ScObj_Skill_RotationGun : Base_ScriptableObject_Skill
                 GameObject.Destroy(attackRandom.gameObject);
                 isEnd = true; 
             });
-        if (paras.componentList.TryGet("Main", out transform))
+        if (paras._itemList.TryGet("Main", out transform))
         {
             var tempPos = transform.transform.position.y;
             transform.transform.DOMoveY(tempPos + height, time_ParsistPlay * topSpeed)
@@ -246,25 +246,25 @@ public class CallBackPara
     public float time_Residue;
     public List<GameObject> targets = new List<GameObject>();
 }
-public class SkillParamater
-{
-    public SkillParamater(Transform tr)
-    {
-        this.tr = tr;
-        if (tr.TryGetComponent(out NavMeshAgent data1))
-        {
-            anv = data1;
-        }
-        if (tr.TryGetComponent(out ComponentList data2))
-        {
-            componentList = data2;
-        }
-    }
-    public Transform tr;
-    public NavMeshAgent anv;
-    public ComponentList componentList;
-    public (Transform left, Transform right) IKHand;
-    public (Transform left, Transform right) IKFoot;
-    public float par_float1;
-    public float par_float2;
-}
+//public class SkillParamater
+//{
+//    public SkillParamater(Transform tr)
+//    {
+//        this.tr = tr;
+//        if (tr.TryGetComponent(out NavMeshAgent data1))
+//        {
+//            anv = data1;
+//        }
+//        if (tr.TryGetComponent(out GameObjectBase3D data2))
+//        {
+//            componentList = data2;
+//        }
+//    }
+//    public Transform tr;
+//    public NavMeshAgent anv;
+//    public GameObjectBase3D componentList;
+//    public (Transform left, Transform right) IKHand;
+//    public (Transform left, Transform right) IKFoot;
+//    public float par_float1;
+//    public float par_float2;
+//}

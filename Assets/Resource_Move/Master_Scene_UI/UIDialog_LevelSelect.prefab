@@ -100,6 +100,7 @@ MonoBehaviour:
     SerializationNodes: []
   _state: 0
   _Rect: {fileID: 5974392912908824425}
+  keyboardShortcut: 13
 --- !u!1 &797024938609661191
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +136,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0.000061035156, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5499590447021867071
@@ -254,7 +255,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Next Level
+  m_Text: "\u8FDB\u5165\u5E87\u62A4\u6240"
 --- !u!1 &6494754111875455944
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,4 +330,3 @@ MonoBehaviour:
   _anima_Asset: {fileID: 0}
   _startHideObjects: []
   btn_nextLevel: {fileID: 1715515496837666709}
-  loadSceneName: 1

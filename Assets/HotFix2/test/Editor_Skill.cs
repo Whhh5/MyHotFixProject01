@@ -11,6 +11,7 @@ public class Editor_Skill : A_Mono
     [SerializeField]public List<Base_ScriptableObject_Skill> value = new List<Base_ScriptableObject_Skill>();
     public Dictionary<int, int> dic = new Dictionary<int, int>();
     [SerializeField] public bool lock_Skill = false;
+    [SerializeField] public bool isAttack = false;
     public override void OnAwake()
     {
         lock_Skill = false;

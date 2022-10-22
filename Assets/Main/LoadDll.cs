@@ -66,6 +66,7 @@ public class LoadDll : MonoBehaviour
         TextAsset dllBytes1 = dllAB.LoadAsset<TextAsset>("HotFix.dll.bytes");
         System.Reflection.Assembly.Load(dllBytes1.bytes);
         TextAsset dllBytes2 = dllAB.LoadAsset<TextAsset>("HotFix2.dll.bytes");
+        Debug.Log($"6    ");
         gameAss = System.Reflection.Assembly.Load(dllBytes2.bytes);
         Debug.Log($"13    ");
 #else

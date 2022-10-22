@@ -25,6 +25,6 @@ Material:
     - _MaxHeright: -1.36
     - _Speed: 19.54
     m_Colors:
-    - _EndColor: {r: 0.35859376, g: 0.5377358, b: 0.25618547, a: 0}
-    - _StartColor: {r: 0.6981132, g: 0.29966182, b: 0.29966182, a: 0}
+    - _EndColor: {r: 0.35859376, g: 0.5377358, b: 0.25618547, a: 1}
+    - _StartColor: {r: 0.6981132, g: 0.29966182, b: 0.29966182, a: 1}
   m_BuildTextureStacks: []

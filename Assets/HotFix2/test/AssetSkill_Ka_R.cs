@@ -18,12 +18,12 @@ public class AssetSkill_Ka_R : Base_ScriptableObject_Skill
     [SerializeField] float height = 5.0f;
 
 
-    public override async UniTask PlayAsync(SkillParamater paras, Func<CallBackPara, UniTask> callback, params object[] parameters)
+    public override async UniTask PlayAsync(GameObjectBase3D paras, Func<CallBackPara, UniTask> callback, params object[] parameters)
     {
-        var transform = paras.tr;
+        var transform = paras.transform;
         var playTime = bulletCount * intervalTime;
-        paras.anv.speed *= slowDown_Speed;
-        if (paras.componentList.TryGet("Main", out Transform transfor_main))
+        paras._navMeshAgent.speed *= slowDown_Speed;
+        if (paras._itemList.TryGet("Main", out Transform transfor_main))
         {
             var originalHeight = transfor_main.localPosition;
             DOTween.To(() => 0.0f, x =>
@@ -60,7 +60,7 @@ public class AssetSkill_Ka_R : Base_ScriptableObject_Skill
                 tasks.Add(task);
             }
             await UniTask.WhenAll(tasks);
-            paras.anv.speed /= slowDown_Speed;
+            paras._navMeshAgent.speed /= slowDown_Speed;
         }
     }
 }

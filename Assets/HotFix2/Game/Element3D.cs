@@ -4,10 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(ComponentList))]
+[RequireComponent(typeof(ItemList))]
 public abstract class Element3D : A_MonoAsync
 {
-    public ComponentList _componentList = null;
+    public ItemList _componentList = null;
     public Transform _main = null;
     public sealed override async UniTask OnAwakeAsync()
     {
@@ -31,7 +31,7 @@ public abstract class Element3D : A_MonoAsync
     private async UniTask InitParams()
     {
         await AsyncDefault();
-        _componentList = GetComponent<ComponentList>();
+        _componentList = GetComponent<ItemList>();
     }
 
     public sealed override async UniTask OnStartAsync()

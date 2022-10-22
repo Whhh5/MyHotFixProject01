@@ -5,14 +5,18 @@ using UnityEngine;
 using BXB.Core;
 using Cysharp.Threading.Tasks;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class CameraController : A_Mono
 {
-    [SerializeField] ComponentList playerController = null;
-    [SerializeField] PlayerController player = null;
-    [SerializeField] Editor_Skill skill = null;
     [SerializeField] bool lock_Move = false;
     [SerializeField] Vector3 targetOffset = new Vector3(0, 20, -20);
+
+    [SerializeField] LayerMask layer1;
+    [SerializeField] LayerMask layer2;
+    [SerializeField] LayerMask layer3;
+
+
 
     public enum MoveType
     {
@@ -27,27 +31,43 @@ public class CameraController : A_Mono
         lock_Move = false;
     }
 
-    public override async void OnStart()
+    public override void OnStart()
     {
-        await UpdateProperty();
         A_Mgr_InputKey.Instance.AddKeyDownEvent(async (keycode) =>
         {
             await AsyncDefault();
-            if (keycode == KeyCode.Mouse1 && player != null)
+            if (keycode == KeyCode.Mouse1)
             {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                var player = GameManager.Instance._nowPlayer;
+                if (Equals(player, null)) return;
+                var ray = GameManager.Instance._mainCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
                 var layer = LayerMask.NameToLayer("Ground");
-                if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, (int)Mathf.Pow(2, layer)))
+                //if (EventSystem.current.IsPointerOverGameObject())
+                //{
+
+                //}
+                if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, layer1) && GameManager.Instance.isPlayerMove)
                 {
-                    await player.SetDestination(hit.point);
+                    var objMask = hit.collider.gameObject.layer;
+                    GameManager.Instance._mouse1SelectTarget = null;
+                    if (Mathf.Pow(2, objMask) == layer2.value) //ground
+                    {
+                        await player._controller.SetDestination(hit.point);
+                    }
+                    if (Mathf.Pow(2, objMask) == layer3.value) //enemy
+                    {
+                        GameManager.Instance._mouse1SelectTarget = hit.collider.gameObject.transform;
+                    }
                 }
             }
         });
         A_Mgr_InputKey.Instance.AddAnyKeyEvent(async (keycode) =>
         {
             await AsyncDefault();
-            if (keycode == KeyCode.Space && player != null)
+            if (keycode == KeyCode.Space)
             {
+                var player = GameManager.Instance._nowPlayer;
+                if (Equals(player, null)) return;
                 var tempPose = player.transform.position + targetOffset;
                 var pos = Vector3.Lerp(transform.position, tempPose, 10.0f * Time.deltaTime);
                 transform.position = pos;
@@ -57,10 +77,12 @@ public class CameraController : A_Mono
 
         A_Mgr_InputKey.Instance.AddKeyDownEvent(async (keyCode) =>
         {
-            var tempData = skill;
+            var tempData = GameManager.Instance._nowPlayer._skill;
             var data = await tempData.TryGetValueAsync(keyCode);
             if (!object.Equals(data, null))
             {
+                var player = GameManager.Instance._nowPlayer;
+                if (Equals(player, null)) return;
                 if (!tempData.lock_Skill)
                 {
                     tempData.lock_Skill = true;
@@ -70,8 +92,7 @@ public class CameraController : A_Mono
                     LogColor(Color.yellow, $"{name} is skilling , please wait ......    ");
                     return;
                 }
-                SkillParamater paras = new SkillParamater(player.transform);
-                await data.PlayAsync(paras, async (value) =>
+                await data.PlayAsync(player, async (value) =>
                 {
                     await AsyncDefault();
                     string str = $"{value.time_Residue.ToString()}\t";
@@ -86,37 +107,21 @@ public class CameraController : A_Mono
         });
     }
 
-    public async UniTask SetController(ComponentList controller)
-    {
-        playerController = controller;
-    }
-
-    public async UniTask UpdateProperty()
+    public async UniTask Pos_NormallizedAsync()
     {
         await AsyncDefault();
-        if (!object.Equals(playerController, null))
-        {
-            if (!Equals(player, null))
+        var player = GameManager.Instance._nowPlayer;
+        var pos_Target = player.transform.position + targetOffset;
+        transform.DOKill();
+        transform.DOMove(pos_Target, 2.0f)
+            .OnStart(() =>
             {
-                await player.SetSclectStateAsync(0);
-            }
-            if (!playerController.TryGet("Player", out player))
+                lock_Move = true;
+            })
+            .OnComplete(() =>
             {
-                LogColor(Color.red, $"Get component defeated, player name -> {playerController.name}, attrite name -> Player");
-            }
-            else
-            {
-                await player.SetSclectStateAsync(1);
-            }
-            if (!playerController.TryGet("Skill", out skill))
-            {
-                LogColor(Color.red, $"Get component defeated, skill name -> {playerController.name}, attrite name -> Skill");
-            }
-        }
-        else
-        {
-            LogColor(Color.red, "error: controller is a nil ......");
-        }
+                lock_Move = false;
+            });
     }
     public async UniTask MoveAsync(MoveType mode)
     {
@@ -146,19 +151,6 @@ public class CameraController : A_Mono
             transform.position += new Vector3(x, y, z) * Time.deltaTime * 30;
         }
     }
-    public async UniTask Pos_NormallizedAsync()
-    {
-        await AsyncDefault();
-        var pos_Target = player.transform.position + targetOffset;
-        transform.DOKill();
-        transform.DOMove(pos_Target, 2.0f)
-            .OnStart(() =>
-            {
-                lock_Move = true;
-            })
-            .OnComplete(() =>
-            {
-                lock_Move = false;
-            });
-    }
+
+
 }

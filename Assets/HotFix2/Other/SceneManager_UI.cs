@@ -12,12 +12,13 @@ using UnityEngine.SceneManagement;
 
 public class SceneManager_UI : MonoBehaviour
 {
-    public RectTransform app1;
-    public RectTransform app2;
+    [SerializeField] Camera mainCamera = null;
     private async void Start()
     {
         Debug.Log("Scene manager ui loaded");
+        await GameManager.Instance.AddCameraStackAsync(mainCamera);
         await A_Mgr_Resource.Instance.LoadSceneAsync(SceneType.Scene_Inlet, LoadSceneMode.Additive);
+
         //Addressables.LoadAssetAsync<GameObject>("UIDialog_LevelSelect").Completed += (handle) =>
         //{
         //    if (handle.Status != AsyncOperationStatus.Failed)
@@ -35,6 +36,10 @@ public class SceneManager_UI : MonoBehaviour
         //Uri uir = new Uri("https://wangjh-hn1-sz.oss-cn-shenzhen.aliyuncs.com/StandaloneWindows64");
         //StartCoroutine(DownloadVideoFile01(uir, "", slider));
 
+    }
+    private async void OnDestroy()
+    {
+        await GameManager.Instance.RemoveCameraStackAsync(mainCamera);
     }
 
     public IEnumerator DownloadVideoFile01(Uri uri, string downloadFileName, Slider sliderProgress)

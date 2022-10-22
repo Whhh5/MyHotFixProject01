@@ -32,7 +32,7 @@ public class Pb_CM_Number3D : Element3D
 
         text.text = message;
         transform.position = position.position;
-        transform.forward = transform.position - Camera.main.transform.position;
+        transform.forward = transform.position - GameManager.Instance._mainCamera.transform.position;
 
         Vector3 moveTime = new Vector3(0.5f, 0.2f);
         float height = 2.0f;

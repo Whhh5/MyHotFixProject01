@@ -1,20 +1,19 @@
+using BXB.Core;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BXB.Core;
-using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
 using UnityEngine.AI;
-using DG.Tweening;
 
-public class PlayerController : A_Mono
+[RequireComponent(typeof(LineRenderer))]
+[RequireComponent(typeof(NavMeshAgent))]
+public class GameObjectController : A_Mono
 {
-    [SerializeField] NavMeshAgent navig;
-    [SerializeField] LineRenderer line;
-    [SerializeField] Transform hint;
     [SerializeField] MeshRenderer select;
-    
-    
+
+    LineRenderer line;
+    NavMeshAgent navig;
     public override void OnAwake()
     {
         navig = GetComponent<NavMeshAgent>();
@@ -33,16 +32,14 @@ public class PlayerController : A_Mono
         LogColor(Color.yellow, $"{name} move to point ...... {transform.position} => {point}");
         navig.SetDestination(point);
 
-
-        var parameter = new NavMeshPath();
-        navig.CalculatePath(point, parameter);
+        //var parameter = new NavMeshPath();
+        //navig.CalculatePath(point, parameter);
     }
 
-    private void Update()
-    {
-        DrawPath();
-    }
-
+    //private void Update()
+    //{
+    //    DrawPath();
+    //}
 
     Tween tween_Select = null;
     public async UniTask SetSclectStateAsync(float endValue)
@@ -59,10 +56,28 @@ public class PlayerController : A_Mono
         }, endValue, time);
         tween_Select.Play();
     }
-    
+
+    public async UniTask SetPathLineAsync(List<Vector3> points)
+    {
+        await AsyncDefault();
+        List<Vector3> list = new List<Vector3>();
+        List<Vector3> ret = new List<Vector3>();
+        list.Add(transform.position);
+        list.AddRange(points);
+        for (int i = 1; i < list.Count; i++)
+        {
+            NavMeshPath path = new NavMeshPath();
+            NavMesh.CalculatePath(list[i - 1], list[i], int.MaxValue, path);
+            ret.AddRange(path.corners);
+        }
+
+        line.positionCount = ret.Count;
+        line.SetPositions(ret.ToArray());
+    }
+
     public void DrawPath()
     {
-        if (!object.Equals(navig,null) && !Equals(line,null))
+        if (!object.Equals(navig, null) && !Equals(line, null))
         {
             var poss = navig.path.corners;
             line.positionCount = (poss.Length);

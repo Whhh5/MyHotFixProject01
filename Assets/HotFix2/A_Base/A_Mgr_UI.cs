@@ -13,6 +13,7 @@ public class A_Mgr_UI : A_Mode_Singleton<A_Mgr_UI>
     {
         App1,
         App2,
+        System,
     }
     private A_List2<A_UIPage> _uiPageStack = new A_List2<A_UIPage>();
     private A_UIPage _nowPage = null;

@@ -6,12 +6,14 @@ using Cysharp.Threading.Tasks;
 
 public class Mgr_Scene_Battle_Classic : A_Mode_Singleton_Mono<Mgr_Scene_Battle_Classic>
 {
-    public CameraController _camera;
-
+    [SerializeField] CameraController _camera = null;
     public override async void OnStart()
     {
         try
         {
+            var camera = _camera.GetComponent<Camera>();
+            await GameManager.Instance.AddCameraStackAsync(camera);
+            await GameManager.Instance.SetMainCameraAsync(_camera);
             await A_Mgr_UI.Instance.ChangePageAsync<UIPage_BattleContriller>();
         }
         catch (System.Exception exp)
@@ -19,11 +21,9 @@ public class Mgr_Scene_Battle_Classic : A_Mode_Singleton_Mono<Mgr_Scene_Battle_C
             LogColor(Color.red, $"scene  initialization defeated  ....     (如果该场景是入口场景可忽略)  \n\t message -> {exp}");
         }
     }
-
-    public async UniTask SetPlayerAsync(ComponentList controller)
+    private async void OnDestroy()
     {
-        await _camera.SetController(controller);
-        await _camera.UpdateProperty();
-        await _camera.Pos_NormallizedAsync();
+        var camera = _camera.GetComponent<Camera>();
+        await GameManager.Instance.RemoveCameraStackAsync(camera);
     }
 }

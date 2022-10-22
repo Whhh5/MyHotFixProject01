@@ -38,6 +38,9 @@ namespace HybridCLR
             "mscorlib.dll",
             "System.dll",
             "System.Core.dll", // 如果使用了Linq，需要这个
+            "System.Data.dll",
+            "DOTween.dll",
+            "UniTask.dll",
         };
 
         public static List<string> AssetBundleFiles { get; } = new List<string>

@@ -30,6 +30,7 @@ public class test2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        var sys = new ParticleSystemRenderer();
+        sys.enabled = false;
     }
 }

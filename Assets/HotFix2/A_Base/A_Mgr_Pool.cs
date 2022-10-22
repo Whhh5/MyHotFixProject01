@@ -12,7 +12,22 @@ namespace BXB
             where TValue : PoolObjectBase
         {
             private Dictionary<GameObject, A_List2<TValue>> _pool = new Dictionary<GameObject, A_List2<TValue>>();
-            public bool Get(GameObject original, out TValue value, bool noneIsNew = false)
+            private Transform root = null;
+            public A_Mgr_Pool(Transform root = null)
+            {
+                if (Equals(root, null))
+                {
+                    var obj = new GameObject("pool_root");
+                    GameObject.DontDestroyOnLoad(obj);
+                    root = obj.transform;
+                }
+                this.root = root;
+            }
+            public void SetRoot(Transform root)
+            {
+                this.root = root;
+            }
+            public bool TryGet(GameObject original, out TValue value, bool noneIsNew = true)
             {
                 bool ret = false;
                 value = null;
@@ -57,11 +72,17 @@ namespace BXB
                         if (!object.ReferenceEquals(obj, null) &&
                             _pool[original].TryPush(obj))
                         {
+                            obj.gameObject.SetActive(false);
+                            obj.transform.SetParent(root);
                         }
                         else
                         {
                             LogColor(Color.yellow, " Ìí¼ÓÊ§°Ü");
                         }
+                    }
+                    else
+                    {
+                        LogColor(Color.yellow, $"not set original   name -> {obj.name}    child Index -> {obj.transform.GetSiblingIndex()}");
                     }
                 }
                 catch (Exception exp)
